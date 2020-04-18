@@ -13,24 +13,28 @@
 
 int main(void)
 {
-	int opcion, primerNumero, segundoNumero, suma, resta;
+	int opcion, primerNumero, segundoNumero, isSetPrimerNumero, isSetSegundoNumero, suma, resta;
 	long long int multiplicacion;
 	unsigned long long int factorialA, factorialB;
 	float division;
 
 	primerNumero = 0;
 	segundoNumero = 0;
+	isSetPrimerNumero = 0;
+	isSetSegundoNumero = 0;
 
-	opcion = menu(primerNumero, segundoNumero);
+	opcion = menu(primerNumero, segundoNumero, isSetPrimerNumero, isSetSegundoNumero);
 
 	while(opcion!=5){
 
 		switch(opcion){
 			case 1:
 				primerNumero = getInt("Ingrese numero (max 5 cifras):");
+				isSetPrimerNumero = 1;
 				break;
 			case 2:
 				segundoNumero = getInt("Ingrese numero (max 5 cifras):");
+				isSetSegundoNumero = 1;
 				break;
 			case 3:
 				suma = sumar(primerNumero, segundoNumero);
@@ -47,7 +51,7 @@ int main(void)
 				mostrarResultados(primerNumero, segundoNumero, suma, resta, division, multiplicacion, factorialA, factorialB);
 		}
 
-		opcion = menu(primerNumero, segundoNumero);
+		opcion = menu(primerNumero, segundoNumero, isSetPrimerNumero, isSetSegundoNumero);
 	};
 
 	return 0;

@@ -14,9 +14,11 @@
  * @brief Muestra un menu en pantalla
  * @param a Primer numero ingresado por el usuario
  * @param b Segundo numero ingresado por el usuario
+ * @param isSetPrimerNumero flag de ingreso
+ * @param isSetSegundoNumero flag de ingreso
  * @return Opcion elegida por el usuario
  */
-int menu(int a, int b);
+int menu(int a, int b, int isSetPrimerNumero, int isSetSegundoNumero);
 
 
 /*

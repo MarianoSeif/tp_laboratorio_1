@@ -53,18 +53,18 @@ int getInt(char mensaje[]){
 	return atoi(numero);
 }
 
-int menu(int a, int b){
+int menu(int a, int b, int isSetPrimerNumero, int isSetSegundoNumero){
 	int opcion;
 
 	do{
 		printf("\n\nMenu:");
 		printf("\n==================================");
-		if((int)a==0){
+		if(isSetPrimerNumero==0){
 			printf("\n1- Ingresar 1er operando (A=No ingresado aun)");
 		}else{
 			printf("\n1- Ingresar 1er operando (A=%d)", a);
 		}
-		if((int)b==0){
+		if(isSetSegundoNumero==0){
 				printf("\n2- Ingresar 2do operando (B=No ingresado aun)");
 		}else{
 				printf("\n2- Ingresar 2do operando (B=%d)", b);
@@ -129,6 +129,8 @@ int mostrarResultados(int primerNumero, int segundoNumero, int suma, int resta, 
 	printf("\n\t- A-B es: %d", resta);
 	if(division == -1){
 		printf("\n\t- A/B - No se puede dividir por cero");
+	}else if(primerNumero==0){
+		printf("\n\t- A/B es: 0");
 	}else{
 		printf("\n\t- A/B es: %f", division);
 	}
