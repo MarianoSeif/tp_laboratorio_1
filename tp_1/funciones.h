@@ -12,8 +12,8 @@
 
 /*
  * @brief Muestra un menu en pantalla
- * @param a Primer numero ingresado
- * @param b Segundo numero ingresado
+ * @param a Primer numero ingresado por el usuario
+ * @param b Segundo numero ingresado por el usuario
  * @return Opcion elegida por el usuario
  */
 int menu(int a, int b);
@@ -21,7 +21,7 @@ int menu(int a, int b);
 
 /*
  * @brief Pide un entero y lo valida
- * @param Mensaje a mostrar al usuario
+ * @param mensaje Mensaje a mostrar al usuario
  * @return numero entero ingresado
  */
 int getInt(char* mensaje);
@@ -31,7 +31,7 @@ int getInt(char* mensaje);
  * @brief Suma dos numero
  * @param a Primer sumando
  * @param b Segundo sumando
- * @return suma de los numeros
+ * @return La suma de los numeros
  */
 int sumar(int a, int b);
 
@@ -49,7 +49,7 @@ int restar(int a, int b);
  * @brief Divide dos numeros
  * @param a Dividendo
  * @param b Divisor
- * @return El resultado de la division o -1 en caso de que b sea 0
+ * @return El resultado de la division o -1 en caso de que el dividendo sea 0
  */
 float dividir(int a, int b);
 
@@ -58,7 +58,7 @@ float dividir(int a, int b);
  * @brief Multiplica dos numeros
  * @param a Multiplicando
  * @param b Multiplicador
- * @return
+ * @return El producto de ambos numeros
  */
 long long int multiplicar(int a, int b);
 
