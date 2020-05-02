@@ -10,8 +10,9 @@
 
 
 int main(){
-	int opcion, id, returnValue;
+	int opcion, id, emptyArrayFlag;
 	Employee empleados[LEN];
+	emptyArrayFlag = 1;
 
 	if(initEmployees(empleados, LEN)==0){
 
@@ -21,36 +22,41 @@ int main(){
 				case 1:
 					if(newEmployee(empleados, LEN)==0){
 						printf("\nEmpleado agregado con éxito!");
+						emptyArrayFlag = 0;
 					}else{
 						printf("\nAlgo salió mal");
 					}
 					break;
 				case 2:
-					updateEmployee(empleados, LEN);
+					if(emptyArrayFlag!=1){
+						if(updateEmployee(empleados, LEN)==-1){
+							printf("\nNo se guardaron los cambios");
+						}else{
+							printf("\n\nModificación guardada con éxito!");
+						}
+					}
 					break;
 				case 3:
-					id = getInt("\nIngrese id del empleado a eliminar: ");
-					returnValue = removeEmployee(empleados, LEN, id);
-					switch(returnValue){
-						case -2:
-							printf("\nNo se eliminó al empleado. Operacion cancelada por el usuario");
-							break;
-						case -1:
-							printf("\nNo se eliminó al empleado. Operacion cancelada por el usuario");
-							break;
-						case 0:
+					if(emptyArrayFlag!=1){
+						id = getInt("\nIngrese id del empleado a eliminar: ");
+						if(removeEmployee(empleados, LEN, id)==-1){
+							printf("\nNo se eliminó al empleado");
+						}else{
 							printf("\nEmpleado eliminado con éxito!");
+						}
 					}
 					break;
 				case 4:
-					sortEmployees(empleados, LEN, 1);
-					printEmployees(empleados, LEN);
+					if(emptyArrayFlag!=1){
+						printf("\n============== LISTADO DE EMPLEADOS ==============");
+						sortEmployees(empleados, LEN, 1);
+						printEmployees(empleados, LEN);
+						calculateData(empleados, LEN);
+					}
 					break;
 			}
-
 			opcion = menuPrincipal();
 		}
-
 		printf("\n Saliendo...");
 
 	}else{

@@ -37,3 +37,5 @@ int sortEmployees(Employee* list, int len, int order);
 int updateEmployee(Employee* empleados, int len);
 
 int generateId(Employee* list, int len);
+
+int calculateData(Employee* empleados, int len);

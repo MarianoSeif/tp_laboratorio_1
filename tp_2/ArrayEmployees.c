@@ -27,7 +27,7 @@ int initEmployees(Employee* list, int len)
 	}else{
 		int i;
 		for(i=0;i<len;i++){
-			list[i].id = i;
+			list[i].id = -1;
 			list[i].isEmpty = 1;
 		}
 		return 0;
@@ -62,9 +62,12 @@ int printOneEmployee(Employee* list, int index)
 
 int generateId(Employee* list, int len){
 	int i, maxId;
+	maxId=0;
 	for(i=0;i<len;i++){
-		if(list[i].id>maxId || i==0){
-			maxId=list[i].id;
+		if(list[i].id!=-1){
+			if(list[i].id>maxId || i==0){
+				maxId=list[i].id;
+			}
 		}
 	}
 	return maxId+1;
@@ -86,17 +89,17 @@ int addEmployee(Employee* list, int len, int id, char name[],char lastName[],flo
 {
 	int index;
 	index = findFirstFreeIndex(list, len);
-	if(index!=-1){
+	if(index == -1){
+		printf("\nError!. No hay lugar para almacenar mas empleados");
+		return -1;
+	}else{
 		list[index].id = id;
 		strcpy(list[index].name, name);
 		strcpy(list[index].lastName, lastName);
 		list[index].salary = salary;
 		list[index].sector = sector;
 		list[index].isEmpty = 0;
-	}else{
-		return -1;
 	}
-
 	return 0;
 }
 
@@ -118,6 +121,7 @@ int newEmployee(Employee* list, int len)
 
 	index = findFirstFreeIndex(list, len);
 	if(index == -1){
+		printf("\nError!. No hay lugar para almacenar mas empleados");
 		return -1;
 	}else{
 		printf("\nIngrese nombre: ");
@@ -136,9 +140,9 @@ int newEmployee(Employee* list, int len)
 		valorRetornoAddEmployee = addEmployee(list, len, id, empleado.name, empleado.lastName, empleado.salary, empleado.sector);
 
 		if(valorRetornoAddEmployee == -1){
-			return -2;
+			printf("\nNo se pudo agregar empleado.");
+			return -1;
 		}
-
 		return 0;
 	}
 }
@@ -177,18 +181,23 @@ int removeEmployee(Employee* list, int len, int id)
 	char opcion;
 
 	index = findEmployeeById(list, len, id);
+	if(index==-1){
+		printf("\nNo se encontró al empleado");
+		return -1;
+	}else{
+		printf("\nId\tNombre\tApellido\tSalario\t\tSector");
+		printOneEmployee(list, index);
 
-	printf("\nId\tNombre\tApellido\tSalario\t\tSector");
-	printOneEmployee(list, index);
-
-	printf("\nEstá seguro que desea eliminar al empleado?(S/N): ");
-	scanf("%c", &opcion);
-	if(tolower(opcion)=='s'){
-		list[index].isEmpty = 1;
-		return 0;
+		printf("\nEstá seguro que desea eliminar al empleado?(S/N): ");
+		scanf("%c", &opcion);
+		if(tolower(opcion)=='s'){
+			list[index].isEmpty = 1;
+		}else{
+			printf("\nOperación cancelada");
+			return -1;
+		}
 	}
-
-	return -2;
+	return 0;
 }
 
 /** \brief Sort the elements in the array of employees, the argument order
@@ -248,9 +257,10 @@ int updateEmployee(Employee* empleados, int len){
 	id = getInt("\nIngrese el id del empleado que desea modificar: ");
 	index = findEmployeeById(empleados, len, id);
 	if(index == -1){
+		printf("\nError!. El empleado no existe");
 		return -1;
 	}else{
-		auxEmployee = empleados[index];
+		auxEmployee = empleados[index]; //Guardo una copia del registro en caso que se cancele la modificación
 		printf("\nId\tNombre\tApellido\tSalario\t\tSector");
 		printOneEmployee(empleados, index);
 
@@ -293,21 +303,43 @@ int updateEmployee(Employee* empleados, int len){
 						opcion=6;
 					}
 					printf("\nModificación cancelada");
+					return -1;
 					break;
-				default:
-					printf("\nIngrese una opción válida");
-					break;
-				}
-
-			if(cancel!='s'){
-				opcion = menuModificar();
 			}
+			opcion = menuModificar();
 		}
-		if(opcion==6 && cancel!='s'){
-			printf("Modificación guardada con éxito!");
-			printOneEmployee(empleados, index);
-		}
-
-		return 0;
 	}
+	printOneEmployee(empleados, index);
+	return 0;
 }
+
+int calculateData(Employee* empleados, int len){
+	int i, contadorEmpleados, empleadosConSalarioMayorAlPromedio;
+	float acumuladorSalario, salarioPromedio;
+	acumuladorSalario=0;
+	contadorEmpleados=0;
+	empleadosConSalarioMayorAlPromedio=0;
+
+	//Total y promedio de los salarios
+	for(i=0;i<len;i++){
+		if(empleados[i].isEmpty!=1){
+			acumuladorSalario+=empleados[i].salary;
+			contadorEmpleados++;
+		}
+	}
+	salarioPromedio=acumuladorSalario/contadorEmpleados;
+
+	//Cantidad de empleados que superan el salario promedio
+	for(i=0;i<len;i++){
+		if(empleados[i].isEmpty != 1 && empleados[i].salary>salarioPromedio){
+			empleadosConSalarioMayorAlPromedio++;
+		}
+	}
+
+	printf("\n\n--> El total de los salarios es: %.2f", acumuladorSalario);
+	printf("\n--> EL salario promedio es: %.2f", salarioPromedio);
+	printf("\n--> La cantidad de empleados con salario mayor al promedio es: %d", empleadosConSalarioMayorAlPromedio);
+	return 0;
+}
+
+

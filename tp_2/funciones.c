@@ -55,7 +55,7 @@ int menuPrincipal(){
 
 	do{
 		printf("\n\nMenu:");
-		printf("\n==================================");
+		printf("\n==================================================");
 		printf("\n1- ALTAS - Ingresar un nuevo empleado");
 		printf("\n2- MODIFICAR - Cambiar datos de un empleado");
 		printf("\n3- BAJA - Eliminar empleado");
