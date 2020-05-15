@@ -6,7 +6,10 @@
  */
 
 
+int getInt(char mensaje[]);
+float getFloat(char mensaje[]);
+int getString(char mensaje[], char string[], int size);
 int menuPrincipal();
 int menuModificar();
-int getInt(char mensaje[]);
+
 

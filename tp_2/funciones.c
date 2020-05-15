@@ -9,9 +9,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-int getInt(char mensaje[]){
-	int i, fail;
-	char numero[6];
+
+/*
+* \brief Obtiene y valida un entero
+* \param mensaje - mensaje a mostrar al usuario
+* \return devuelve el valor ingresado en el caso que sea válido
+*/
+int getInt(char mensaje[])
+{
+	int i, sizeBuffer, fail;
+	sizeBuffer = 10;
+	char buffer[sizeBuffer];
 
 	fail=0;
 
@@ -22,33 +30,126 @@ int getInt(char mensaje[]){
 		}
 		printf("\n%s", mensaje);
 
-		do{
-			__fpurge(stdin);
-			fgets(numero, 7, stdin);
-		}while(numero[0]=='\n' || numero[0]=='\0');
+		__fpurge(stdin);
+		fgets(buffer, sizeBuffer+1, stdin);
 
-		if(numero[0]=='-' || numero[0]=='+'){
-			numero[strlen(numero)] = '\0';
-			for(i=1;i<(strlen(numero)-1);i++)
-			{
-				if(numero[i]<'0' || numero[i]>'9'){
-					fail = 1;
-				}
-			}
+		if(strlen(buffer)==1){
+		    fail=1;
 		}else{
-			numero[strlen(numero)-1] = '\0';
-			for(i=0;i<(strlen(numero));i++)
-			{
-				if(numero[i]<'0' || numero[i]>'9'){
-					fail = 1;
-				}
-			}
+		    buffer[strlen(buffer)-1] = '\0';
+            if(buffer[0]=='-' || buffer[0]=='+'){
+    		    i=1;
+    		}else{
+    		    i=0;
+    		}
+
+    		for(;i<strlen(buffer);i++){
+    			if(buffer[i]<'0' || buffer[i]>'9'){
+    				fail = 1;
+    			}
+    		}
 		}
 
 	}while(fail==1);
 
-	return atoi(numero);
+	return atoi(buffer);
 }
+
+
+/*
+* \brief Obtiene y valida un numero en punto flotante
+* \param mensaje - el mensaje a mostrar al usuario
+* \return devuelve el valor ingresado en caso que sea válido
+*/
+
+float getFloat(char mensaje[]){
+
+	int i, sizeBuffer, fail, puntos;
+	sizeBuffer = 10;
+	char buffer[sizeBuffer];
+
+	fail=0;
+	puntos=0;
+
+	do{
+		if(fail==1){
+			printf("\nError!");
+			fail=0;
+			puntos=0;
+		}
+		printf("\n%s", mensaje);
+
+		__fpurge(stdin);
+		fgets(buffer, sizeBuffer+1, stdin);
+
+		if(strlen(buffer)==1){
+		    fail=1;
+		}else{
+            buffer[strlen(buffer)-1] = '\0';
+        	if(buffer[0]=='-' || buffer[0]=='+'){
+    		    i=1;
+    		}else{
+    		    i=0;
+    		}
+
+    		for(;i<strlen(buffer);i++)
+    		{
+    			if(buffer[i]<'0' || buffer[i]>'9'){
+    			    if(buffer[i]=='.' && puntos==0){
+    			        puntos++;
+    			    }else{
+    				    fail = 1;
+    			    }
+    			}
+    		}
+		}
+
+	}while(fail==1);
+
+	return atof(buffer);
+}
+
+
+/*
+* \brief Obtiene un conjunto de palabras
+* \param mensaje: el mensaje a mostrar al usuario
+* \param string: puntero a cadena donde se almacenará el string ingresado
+* \param size: tamaño del string
+* \return 0 en caso de éxito
+*/
+int getString(char mensaje[], char string[], int size)
+{
+	int i, fail;
+
+	fail=0;
+
+	do{
+		if(fail==1){
+			printf("\nError!");
+			fail=0;
+		}
+		printf("\n%s", mensaje);
+
+		__fpurge(stdin);
+		fgets(string, size+1, stdin);
+
+		if(strlen(string)==1){
+		    fail=1;
+		}else{
+            string[strlen(string)-1] = '\0';
+            for(i=0;i<strlen(string);i++){
+    		    if(!((string[i]>='a' && string[i]<='z') || (string[i]>='A' && string[i]<='Z') || string[i]==' ')) {
+    			    fail = 1;
+    		    }
+    		}
+    	}
+
+	}while(fail==1);
+
+	return 0;
+}
+
+
 
 int menuPrincipal(){
 	int opcion;

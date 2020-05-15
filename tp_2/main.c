@@ -8,59 +8,72 @@
 #include "ArrayEmployees.h"
 #include <stdio.h>
 
+#define LEN 10
 
 int main(){
-	int opcion, id, emptyArrayFlag;
+	int opcion, id, loadedArrayFlag;
 	Employee empleados[LEN];
-	emptyArrayFlag = 1;
+	loadedArrayFlag = 0;
 
 	if(initEmployees(empleados, LEN)==0){
+
+		harcodearEmployees(empleados, LEN);
 
 		opcion = menuPrincipal();
 		while(opcion!=5){
 			switch(opcion){
 				case 1:
+					printf("\n================ CARGAR EMPLEADO =================");
 					if(newEmployee(empleados, LEN)==0){
-						printf("\nEmpleado agregado con éxito!");
-						emptyArrayFlag = 0;
+						printf("\n\t-->Empleado agregado con éxito!");
+						loadedArrayFlag = 1;
 					}else{
-						printf("\nAlgo salió mal");
+						printf("\n\t-->Algo salió mal");
 					}
 					break;
 				case 2:
-					if(emptyArrayFlag!=1){
+					if(loadedArrayFlag){
+						printf("\n=============== MODIFICAR EMPLEADO ===============");
 						if(updateEmployee(empleados, LEN)==-1){
-							printf("\nNo se guardaron los cambios");
+							printf("\n\t-->No se guardaron los cambios");
 						}else{
-							printf("\n\nModificación guardada con éxito!");
+							printf("\n\n\t-->Modificación guardada con éxito!");
 						}
+					}else{
+						printf("\n\t-->No hay empleados cargados");
 					}
 					break;
 				case 3:
-					if(emptyArrayFlag!=1){
+					if(loadedArrayFlag){
+						printf("\n=============== ELIMINAR EMPLEADO ===============");
+						printEmployees(empleados, LEN);
 						id = getInt("\nIngrese id del empleado a eliminar: ");
 						if(removeEmployee(empleados, LEN, id)==-1){
-							printf("\nNo se eliminó al empleado");
+							printf("\n\t-->No se eliminó al empleado");
 						}else{
-							printf("\nEmpleado eliminado con éxito!");
+							printf("\n\t-->Empleado eliminado con éxito!");
 						}
+					}else{
+						printf("\n\t-->No hay empleados cargados");
 					}
 					break;
 				case 4:
-					if(emptyArrayFlag!=1){
+					if(loadedArrayFlag){
 						printf("\n============== LISTADO DE EMPLEADOS ==============");
 						sortEmployees(empleados, LEN, 1);
 						printEmployees(empleados, LEN);
 						calculateData(empleados, LEN);
+					}else{
+						printf("\n\t-->No hay empleados cargados");
 					}
 					break;
 			}
 			opcion = menuPrincipal();
 		}
-		printf("\n Saliendo...");
+		printf("\n\t-->Saliendo...");
 
 	}else{
-		printf("\nError de inicializacion de datos");
+		printf("\n\t-->Error de inicialización de datos");
 	}
 
 	return 0;

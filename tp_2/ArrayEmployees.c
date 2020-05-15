@@ -12,6 +12,27 @@
 #include <string.h>
 #include <ctype.h>
 
+int harcodearEmployees(Employee* list, int len)
+{
+	int i;
+	char nombres[][50]={"jose","carlos","juan","mario","juan jose"};
+	char apellidos[][50]={"duval","rabinovich","perez","rodriguez","lopecito"};
+	float salarios[5]={35000,150000,55000,46700,10000};
+	int sectores[5]={2,4,6,5,3};
+
+	for(i=0;i<5;i++){
+		strcpy(list[i].name, nombres[i]);
+		strcpy(list[i].lastName,apellidos[i]);
+		list[i].salary=salarios[i];
+		list[i].sector=sectores[i];
+		list[i].isEmpty=0;
+		list[i].id=generateId(list, len);
+	}
+
+	return 0;
+}
+
+
 /** \brief To indicate that all position in the array are empty,
 * 			this function put the flag (isEmpty) in TRUE in all
 *			position of the array
@@ -22,7 +43,7 @@
 */
 int initEmployees(Employee* list, int len)
 {
-	if(list==NULL || len>1000){
+	if(list==NULL || len>1000 || len<1){
 		return -1;
 	}else{
 		int i;
@@ -30,8 +51,19 @@ int initEmployees(Employee* list, int len)
 			list[i].id = -1;
 			list[i].isEmpty = 1;
 		}
-		return 0;
 	}
+	return 0;
+}
+
+int printOneEmployee(Employee* list, int index, int header)
+{
+
+	if(header){
+		printf("\n%5s%15s%15s%15s%10s","Id","Nombre","Apellido","Salario","Sector");
+	}
+
+	printf("\n%5d%15s%15s%15.2f%10d", list[index].id, list[index].name, list[index].lastName, list[index].salary, list[index].sector);
+	return 0;
 }
 
 
@@ -46,16 +78,11 @@ int printEmployees(Employee* list, int length)
 {
 	int i;
 
-	printf("\nId\tNombre\tApellido\tSalario\t\tSector");
+	//printf("\nId\tNombre\tApellido\tSalario\t\tSector");
+	printf("\n%5s%15s%15s%15s%10s","Id","Nombre","Apellido","Salario","Sector");
 	for(i=0;i<length;i++){
-		if(list[i].isEmpty!=1) printOneEmployee(list, i);
+		if(list[i].isEmpty!=1) printOneEmployee(list, i, 0);
 	}
-	return 0;
-}
-
-int printOneEmployee(Employee* list, int index)
-{
-	printf("\n%d\t%s\t%s\t%.2f\t%d", list[index].id, list[index].name, list[index].lastName, list[index].salary, list[index].sector);
 	return 0;
 }
 
@@ -88,17 +115,20 @@ int generateId(Employee* list, int len){
 int addEmployee(Employee* list, int len, int id, char name[],char lastName[],float salary,int sector)
 {
 	int index;
-	index = findFirstFreeIndex(list, len);
-	if(index == -1){
-		printf("\nError!. No hay lugar para almacenar mas empleados");
+	if(list==NULL || len>1000 || len<1){
 		return -1;
 	}else{
-		list[index].id = id;
-		strcpy(list[index].name, name);
-		strcpy(list[index].lastName, lastName);
-		list[index].salary = salary;
-		list[index].sector = sector;
-		list[index].isEmpty = 0;
+		index = findFirstFreeIndex(list, len);
+		if(index == -1){
+			return -1;
+		}else{
+			list[index].id = id;
+			strcpy(list[index].name, name);
+			strcpy(list[index].lastName, lastName);
+			list[index].salary = salary;
+			list[index].sector = sector;
+			list[index].isEmpty = 0;
+		}
 	}
 	return 0;
 }
@@ -119,22 +149,23 @@ int newEmployee(Employee* list, int len)
 	int id, index, valorRetornoAddEmployee;
 	Employee empleado;
 
-	index = findFirstFreeIndex(list, len);
+	index = findFirstFreeIndex(list, len); //Busco lugar en el array antes de pedir los datos
 	if(index == -1){
 		printf("\nError!. No hay lugar para almacenar mas empleados");
 		return -1;
 	}else{
-		printf("\nIngrese nombre: ");
-		__fpurge(stdin);
-		fgets(empleado.name, 51, stdin);
-		empleado.name[strlen(empleado.name)-1] = '\0';
-		printf("\nIngrese apellido: ");
-		__fpurge(stdin);
-		fgets(empleado.lastName, 51, stdin);
-		empleado.lastName[strlen(empleado.lastName)-1] = '\0';
-		printf("\nIngrese salario: ");
-		scanf("%f", &empleado.salary);
+		getString("Ingrese nombre: ", empleado.name, 51);
+		getString("Ingrese apellido: ", empleado.lastName, 51);
+		empleado.salary = getFloat("Ingrese salario: ");
+		while(empleado.salary < 0){
+			printf("\nError. Ingrese nuevamente");
+			empleado.salary = getFloat("Ingrese salario: ");
+		}
 		empleado.sector = getInt("\nIngrese sector: ");
+		while(empleado.sector < 0){
+			printf("\nError. Ingrese nuevamente");
+			empleado.sector = getInt("\nIngrese sector: ");
+		}
 
 		id = generateId(list, len);
 		valorRetornoAddEmployee = addEmployee(list, len, id, empleado.name, empleado.lastName, empleado.salary, empleado.sector);
@@ -158,12 +189,16 @@ int newEmployee(Employee* list, int len)
 int findEmployeeById(Employee* list, int len,int id)
 {
 	int i;
-	for(i=0;i<len;i++){
-		if(list[i].id == id && list[i].isEmpty != 1){
-			return i;
+	if(list==NULL || len>1000 || len<1){
+		printf("\nNo se encontró al empleado");
+		return -1;
+	}else{
+		for(i=0;i<len;i++){
+			if(list[i].id == id && list[i].isEmpty != 1){
+				return i;
+			}
 		}
 	}
-
 	return -1;
 }
 
@@ -180,21 +215,25 @@ int removeEmployee(Employee* list, int len, int id)
 	int index;
 	char opcion;
 
-	index = findEmployeeById(list, len, id);
-	if(index==-1){
-		printf("\nNo se encontró al empleado");
+	if(list==NULL || len>1000 || len<1){
 		return -1;
 	}else{
-		printf("\nId\tNombre\tApellido\tSalario\t\tSector");
-		printOneEmployee(list, index);
-
-		printf("\nEstá seguro que desea eliminar al empleado?(S/N): ");
-		scanf("%c", &opcion);
-		if(tolower(opcion)=='s'){
-			list[index].isEmpty = 1;
-		}else{
-			printf("\nOperación cancelada");
+		index = findEmployeeById(list, len, id);
+		if(index==-1){
+			printf("\nNo se encontró al empleado");
 			return -1;
+		}else{
+			printOneEmployee(list, index,1);
+
+			printf("\nEstá seguro que desea eliminar al empleado?(S/N): ");
+			__fpurge(stdin);
+			scanf("%c", &opcion);
+			if(tolower(opcion)=='s'){
+				list[index].isEmpty = 1;
+			}else{
+				printf("\nOperación cancelada");
+				return -1;
+			}
 		}
 	}
 	return 0;
@@ -212,32 +251,46 @@ indicate UP or DOWN order
 int sortEmployees(Employee* list, int len, int order)
 {
 	int i,j;
-	Employee auxEmployee;
 
-	for(i=0;i<(len-1);i++){
-		for(j=i+1;j<len;j++){
-			if(order==1){
-				if(strcmp(list[i].lastName, list[j].lastName) > 0 ){
-					auxEmployee=list[i];
-					list[i]=list[j];
-					list[j]=auxEmployee;
-				}else if(strcmp(list[i].lastName, list[j].lastName) == 0 ){
-					if(list[i].sector > list[j].sector){
-						auxEmployee=list[i];
+	if(list==NULL || len>1000 || len<1){
+		return -1;
+	}else{
+		for(i=0;i<(len-1);i++){
+			for(j=i+1;j<len;j++){
+				if(order==1){
+					if(strcmp(list[i].lastName, list[j].lastName) > 0 ){
+						swapEmployees(list, len, i, j);
+						/*auxEmployee=list[i];
 						list[i]=list[j];
 						list[j]=auxEmployee;
+						*/
+					}else if(strcmp(list[i].lastName, list[j].lastName) == 0 ){
+						if(list[i].sector > list[j].sector){
+							swapEmployees(list, len, i, j);
+							/*
+							auxEmployee=list[i];
+							list[i]=list[j];
+							list[j]=auxEmployee;
+							*/
+						}
 					}
-				}
-			}else if(order==0){
-				if(strcmp(list[i].lastName, list[j].lastName) < 0 ){
-					auxEmployee=list[i];
-					list[i]=list[j];
-					list[j]=auxEmployee;
-				}else if(strcmp(list[i].lastName, list[j].lastName) == 0 ){
-					if(list[i].sector < list[j].sector){
+				}else if(order==0){
+					if(strcmp(list[i].lastName, list[j].lastName) < 0 ){
+						swapEmployees(list, len, i, j);
+						/*
 						auxEmployee=list[i];
 						list[i]=list[j];
 						list[j]=auxEmployee;
+						*/
+					}else if(strcmp(list[i].lastName, list[j].lastName) == 0 ){
+						if(list[i].sector < list[j].sector){
+							swapEmployees(list, len, i, j);
+							/*
+							auxEmployee=list[i];
+							list[i]=list[j];
+							list[j]=auxEmployee;
+							*/
+						}
 					}
 				}
 			}
@@ -247,13 +300,22 @@ int sortEmployees(Employee* list, int len, int order)
 	return 0;
 }
 
+int swapEmployees(Employee* list, int len, int i, int j)
+{
+	Employee auxEmployee;
+	auxEmployee=list[i];
+	list[i]=list[j];
+	list[j]=auxEmployee;
+	return 0;
+}
+
 int updateEmployee(Employee* empleados, int len){
 	int opcion, index, id;
 	char cancel;
 	Employee auxEmployee;
 
 	cancel='n';
-
+	printEmployees(empleados, len);
 	id = getInt("\nIngrese el id del empleado que desea modificar: ");
 	index = findEmployeeById(empleados, len, id);
 	if(index == -1){
@@ -261,8 +323,7 @@ int updateEmployee(Employee* empleados, int len){
 		return -1;
 	}else{
 		auxEmployee = empleados[index]; //Guardo una copia del registro en caso que se cancele la modificación
-		printf("\nId\tNombre\tApellido\tSalario\t\tSector");
-		printOneEmployee(empleados, index);
+		printOneEmployee(empleados, index,1);
 
 		opcion = menuModificar();
 
@@ -273,30 +334,27 @@ int updateEmployee(Employee* empleados, int len){
 					__fpurge(stdin);
 					fgets(empleados[index].name, 51, stdin);
 					empleados[index].name[strlen(empleados[index].name)-1] = '\0';
-					printf("\nId\tNombre\tApellido\tSalario\t\tSector");
-					printOneEmployee(empleados, index);
+					printOneEmployee(empleados, index,1);
 					break;
 				case 2:
 					printf("\nIngrese apellido: ");
 					__fpurge(stdin);
 					fgets(empleados[index].lastName, 51, stdin);
 					empleados[index].lastName[strlen(empleados[index].lastName)-1] = '\0';
-					printf("\nId\tNombre\tApellido\tSalario\t\tSector");
-					printOneEmployee(empleados, index);
+					printOneEmployee(empleados, index,1);
 					break;
 				case 3:
 					printf("\nIngrese salario: ");
 					scanf("%f", &empleados[index].salary);
-					printf("\nId\tNombre\tApellido\tSalario\t\tSector");
-					printOneEmployee(empleados, index);
+					printOneEmployee(empleados, index,1);
 					break;
 				case 4:
 					empleados[index].sector = getInt("\nIngrese sector: ");
-					printf("\nId\tNombre\tApellido\tSalario\t\tSector");
-					printOneEmployee(empleados, index);
+					printOneEmployee(empleados, index,1);
 					break;
 				case 5:
 					printf("\nEstá seguro que desea cancelar la modificación?(S/N): ");
+					__fpurge(stdin);
 					scanf("%c", &cancel);
 					if(tolower(cancel)=='s'){
 						empleados[index]=auxEmployee;
@@ -309,7 +367,7 @@ int updateEmployee(Employee* empleados, int len){
 			opcion = menuModificar();
 		}
 	}
-	printOneEmployee(empleados, index);
+	printOneEmployee(empleados, index,0);
 	return 0;
 }
 
