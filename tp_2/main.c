@@ -2,13 +2,15 @@
  * main.c
  *
  *  Created on: 24 abr. 2020
- *      Author: mfs
+ *      Author: Mariano Seif
+ *      Curso: 1F
+ *      Legajo: 110070
  */
 #include "funciones.h"
 #include "ArrayEmployees.h"
 #include <stdio.h>
 
-#define LEN 10
+#define LEN 1000 //largo del array de empleados
 
 int main(){
 	int opcion, id, loadedArrayFlag;
@@ -16,8 +18,6 @@ int main(){
 	loadedArrayFlag = 0;
 
 	if(initEmployees(empleados, LEN)==0){
-
-		harcodearEmployees(empleados, LEN);
 
 		opcion = menuPrincipal();
 		while(opcion!=5){

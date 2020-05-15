@@ -2,7 +2,9 @@
  * ArrayEmployees.h
  *
  *  Created on: 24 abr. 2020
- *      Author: mfs
+ *      Author: Mariano Seif
+ *      Curso: 1F
+ *      Legajo: 110070
  */
 
 
@@ -15,8 +17,6 @@ typedef struct{
 	int sector;
 	int isEmpty;
 } Employee;
-
-int harcodearEmployees(Employee* list, int len);
 
 int initEmployees(Employee* list, int len);
 

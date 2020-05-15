@@ -2,8 +2,11 @@
  * funciones.c
  *
  *  Created on: 24 abr. 2020
- *      Author: mfs
+ *      Author: Mariano Seif
+ *      Curso: 1F
+ *      Legajo: 110070
  */
+
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
@@ -149,8 +152,10 @@ int getString(char mensaje[], char string[], int size)
 	return 0;
 }
 
-
-
+/*
+* \brief Muestra un menu en pantalla y lee la opción elegida por el usuario
+* \return Devuelve una opción válida elegida por el usuario
+*/
 int menuPrincipal(){
 	int opcion;
 
@@ -175,6 +180,10 @@ int menuPrincipal(){
 	return opcion;
 }
 
+/*
+* \brief Muestra un menu para modifcar empleado y lee la opción elegida por el usuario
+* \return Devuelve una opción válida elegida por el usuario
+*/
 int menuModificar(){
 	int opcion;
 

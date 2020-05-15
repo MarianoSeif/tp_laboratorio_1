@@ -2,7 +2,9 @@
  * ArrayEmployees.c
  *
  *  Created on: 24 abr. 2020
- *      Author: mfs
+ *      Author: Mariano Seif
+ *      Curso: 1F
+ *      Legajo: 110070
  */
 
 #include "ArrayEmployees.h"
@@ -11,26 +13,6 @@
 #include <stdio_ext.h>
 #include <string.h>
 #include <ctype.h>
-
-int harcodearEmployees(Employee* list, int len)
-{
-	int i;
-	char nombres[][50]={"jose","carlos","juan","mario","juan jose"};
-	char apellidos[][50]={"duval","rabinovich","perez","rodriguez","lopecito"};
-	float salarios[5]={35000,150000,55000,46700,10000};
-	int sectores[5]={2,4,6,5,3};
-
-	for(i=0;i<5;i++){
-		strcpy(list[i].name, nombres[i]);
-		strcpy(list[i].lastName,apellidos[i]);
-		list[i].salary=salarios[i];
-		list[i].sector=sectores[i];
-		list[i].isEmpty=0;
-		list[i].id=generateId(list, len);
-	}
-
-	return 0;
-}
 
 
 /** \brief To indicate that all position in the array are empty,
@@ -55,23 +37,28 @@ int initEmployees(Employee* list, int len)
 	return 0;
 }
 
+
+/*
+* \brief Impime un solo empleado
+* \param list puntero a la lista de empleados
+* \param len tamaño del array
+* \param header - 1 imprimie un encabezado - 0 no imprime un encabezado
+* \return 0
+*/
 int printOneEmployee(Employee* list, int index, int header)
 {
-
 	if(header){
 		printf("\n%5s%15s%15s%15s%10s","Id","Nombre","Apellido","Salario","Sector");
 	}
-
 	printf("\n%5d%15s%15s%15.2f%10d", list[index].id, list[index].name, list[index].lastName, list[index].salary, list[index].sector);
 	return 0;
 }
 
-
-/** \brief print the content of employees array
-*
-* \param list Employee*
-* \param length int
-* \return int
+/*
+* \brief print the content of employees array
+* \param list Employee* Pointer to array of employees
+* \param len int Array length
+* \return int Return 0
 *
 */
 int printEmployees(Employee* list, int length)
@@ -86,7 +73,12 @@ int printEmployees(Employee* list, int length)
 	return 0;
 }
 
-
+/*
+* \brief Genera un id autoincremental para la lista de empleados
+* \param list puntero a la lista de empleados
+* \param len tamaño del array
+* \return int Devuelve el valor del próximo id a ser utilizado
+*/
 int generateId(Employee* list, int len){
 	int i, maxId;
 	maxId=0;
@@ -102,13 +94,13 @@ int generateId(Employee* list, int len){
 
 /** \brief add in a existing list of employees the values received as parameters
 *			in the first empty position
-* \param list employee*
-* \param len int
-* \param id int
-* \param name[] char
-* \param lastName[] char
-* \param salary float
-* \param sector int
+* \param list Employee* Pointer to array of employees
+* \param len int array lenght
+* \param id int id of the employee
+* \param name[] char pointer to the name of the employee
+* \param lastName[] char pointer to the last name of the employee
+* \param salary float salary of the employee
+* \param sector int sector of the employee
 * \return int Return (-1) if Error [Invalid length or NULL pointer or without
 *				free space] - (0) if Ok
 **/
@@ -133,6 +125,13 @@ int addEmployee(Employee* list, int len, int id, char name[],char lastName[],flo
 	return 0;
 }
 
+
+/*
+* \brief Encuentra el primer lugar libre en el array
+* \param list puntero a la lista de empleados
+* \param len tamaño del array
+* \return int Devuelve el indice del lugar liber encontrado o -1 si no hay mas lugar
+*/
 int findFirstFreeIndex(Employee* list, int len)
 {
 	int i;
@@ -144,6 +143,13 @@ int findFirstFreeIndex(Employee* list, int len)
 	return -1;
 }
 
+
+/*
+* \brief Recibe los datos del usuario para crear un nueo registro
+* \param list puntero a la lista de empleados
+* \param len tamaño del array
+* \return int Devuelve 0 en caso de éxito y -1 en caso de error
+*/
 int newEmployee(Employee* list, int len)
 {
 	int id, index, valorRetornoAddEmployee;
@@ -178,11 +184,12 @@ int newEmployee(Employee* list, int len)
 	}
 }
 
+
 /** \brief find an Employee by Id and returns the index position in array.
 *
-* \param list Employee*
-* \param len int
-* \param id int
+* \param list Employee* Pointer to array of employees
+* \param len int array lenght
+* \param id int id of the employee
 * \return Return employee index position or (-1) if [Invalid length or NULL pointer received or employee not found]
 *
 */
@@ -202,13 +209,12 @@ int findEmployeeById(Employee* list, int len,int id)
 	return -1;
 }
 
-/** \brief Remove a Employee by Id (put isEmpty Flag in 1)
-*
-* \param list Employee*
-* \param len int
-* \param id int
+/*
+* \brief Remove a Employee by Id (put isEmpty Flag in 1)
+* \param list Employee* Pointer to array of employees
+* \param len int array lenght
+* \param id int id of the employee
 * \return int Return (-1) if Error [Invalid length or NULL pointer or if can't find a employee] - (0) if Ok
-*
 */
 int removeEmployee(Employee* list, int len, int id)
 {
@@ -239,11 +245,10 @@ int removeEmployee(Employee* list, int len, int id)
 	return 0;
 }
 
-/** \brief Sort the elements in the array of employees, the argument order
-indicate UP or DOWN order
-*
-* \param list Employee*
-* \param len int
+/*
+* \brief Sort the elements in the array of employees, the argument order indicate UP or DOWN order
+* \param list Employee* Pointer to array of employees
+* \param len int array lenght
 * \param order int [1] indicate UP - [0] indicate DOWN
 * \return int Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
 *
@@ -260,36 +265,17 @@ int sortEmployees(Employee* list, int len, int order)
 				if(order==1){
 					if(strcmp(list[i].lastName, list[j].lastName) > 0 ){
 						swapEmployees(list, len, i, j);
-						/*auxEmployee=list[i];
-						list[i]=list[j];
-						list[j]=auxEmployee;
-						*/
 					}else if(strcmp(list[i].lastName, list[j].lastName) == 0 ){
 						if(list[i].sector > list[j].sector){
 							swapEmployees(list, len, i, j);
-							/*
-							auxEmployee=list[i];
-							list[i]=list[j];
-							list[j]=auxEmployee;
-							*/
 						}
 					}
 				}else if(order==0){
 					if(strcmp(list[i].lastName, list[j].lastName) < 0 ){
 						swapEmployees(list, len, i, j);
-						/*
-						auxEmployee=list[i];
-						list[i]=list[j];
-						list[j]=auxEmployee;
-						*/
 					}else if(strcmp(list[i].lastName, list[j].lastName) == 0 ){
 						if(list[i].sector < list[j].sector){
 							swapEmployees(list, len, i, j);
-							/*
-							auxEmployee=list[i];
-							list[i]=list[j];
-							list[j]=auxEmployee;
-							*/
 						}
 					}
 				}
@@ -300,6 +286,15 @@ int sortEmployees(Employee* list, int len, int order)
 	return 0;
 }
 
+
+/*
+* \brief Intercambia el orden de los registro en el array
+* \param list puntero a la lista de empleados
+* \param len tamaño del array
+* \param i indice del primer elemento
+* \param j indice del segundo elemento
+* \return int Devuelve 0
+*/
 int swapEmployees(Employee* list, int len, int i, int j)
 {
 	Employee auxEmployee;
@@ -309,55 +304,65 @@ int swapEmployees(Employee* list, int len, int i, int j)
 	return 0;
 }
 
-int updateEmployee(Employee* empleados, int len){
+
+/*
+* \brief Modifica los datos de un empleado seleccionado por el usuario
+* \param list puntero a la lista de empleados
+* \param len tamaño del array
+* \param i indice del primer elemento
+* \param j indice del segundo elemento
+* \return int Devuelve 0
+*/
+int updateEmployee(Employee* list, int len){
 	int opcion, index, id;
 	char cancel;
 	Employee auxEmployee;
 
 	cancel='n';
-	printEmployees(empleados, len);
+	printEmployees(list, len);
 	id = getInt("\nIngrese el id del empleado que desea modificar: ");
-	index = findEmployeeById(empleados, len, id);
+	index = findEmployeeById(list, len, id);
 	if(index == -1){
 		printf("\nError!. El empleado no existe");
 		return -1;
 	}else{
-		auxEmployee = empleados[index]; //Guardo una copia del registro en caso que se cancele la modificación
-		printOneEmployee(empleados, index,1);
+		auxEmployee = list[index]; //Guardo una copia del registro en caso que se cancele la modificación
+		printOneEmployee(list, index,1);
 
 		opcion = menuModificar();
 
 		while(opcion!=6){
 			switch(opcion){
 				case 1:
-					printf("\nIngrese nuevo nombre: ");
-					__fpurge(stdin);
-					fgets(empleados[index].name, 51, stdin);
-					empleados[index].name[strlen(empleados[index].name)-1] = '\0';
-					printOneEmployee(empleados, index,1);
+					getString("Ingrese nombre: ", list[index].name, 51);
+					printOneEmployee(list, index,1);
 					break;
 				case 2:
-					printf("\nIngrese apellido: ");
-					__fpurge(stdin);
-					fgets(empleados[index].lastName, 51, stdin);
-					empleados[index].lastName[strlen(empleados[index].lastName)-1] = '\0';
-					printOneEmployee(empleados, index,1);
+					getString("Ingrese apellido: ", list[index].lastName, 51);
+					printOneEmployee(list, index,1);
 					break;
 				case 3:
-					printf("\nIngrese salario: ");
-					scanf("%f", &empleados[index].salary);
-					printOneEmployee(empleados, index,1);
+					list[index].salary = getFloat("Ingrese salario: ");
+					while(list[index].salary < 0){
+						printf("\nError. Ingrese nuevamente");
+						list[index].salary = getFloat("Ingrese salario: ");
+					}
+					printOneEmployee(list, index,1);
 					break;
 				case 4:
-					empleados[index].sector = getInt("\nIngrese sector: ");
-					printOneEmployee(empleados, index,1);
+					list[index].sector = getInt("\nIngrese sector: ");
+					while(list[index].sector < 0){
+						printf("\nError. Ingrese nuevamente");
+						list[index].sector = getInt("\nIngrese sector: ");
+					}
+					printOneEmployee(list, index,1);
 					break;
 				case 5:
 					printf("\nEstá seguro que desea cancelar la modificación?(S/N): ");
 					__fpurge(stdin);
 					scanf("%c", &cancel);
 					if(tolower(cancel)=='s'){
-						empleados[index]=auxEmployee;
+						list[index]=auxEmployee;
 						opcion=6;
 					}
 					printf("\nModificación cancelada");
@@ -367,11 +372,18 @@ int updateEmployee(Employee* empleados, int len){
 			opcion = menuModificar();
 		}
 	}
-	printOneEmployee(empleados, index,0);
+	printOneEmployee(list, index,0);
 	return 0;
 }
 
-int calculateData(Employee* empleados, int len){
+
+/*
+* \brief Calcula los datos para el informe
+* \param list puntero a la lista de empleados
+* \param len tamaño del array
+* \return int Devuelve 0
+*/
+int calculateData(Employee* list, int len){
 	int i, contadorEmpleados, empleadosConSalarioMayorAlPromedio;
 	float acumuladorSalario, salarioPromedio;
 	acumuladorSalario=0;
@@ -380,8 +392,8 @@ int calculateData(Employee* empleados, int len){
 
 	//Total y promedio de los salarios
 	for(i=0;i<len;i++){
-		if(empleados[i].isEmpty!=1){
-			acumuladorSalario+=empleados[i].salary;
+		if(list[i].isEmpty!=1){
+			acumuladorSalario+=list[i].salary;
 			contadorEmpleados++;
 		}
 	}
@@ -389,7 +401,7 @@ int calculateData(Employee* empleados, int len){
 
 	//Cantidad de empleados que superan el salario promedio
 	for(i=0;i<len;i++){
-		if(empleados[i].isEmpty != 1 && empleados[i].salary>salarioPromedio){
+		if(list[i].isEmpty != 1 && list[i].salary>salarioPromedio){
 			empleadosConSalarioMayorAlPromedio++;
 		}
 	}
