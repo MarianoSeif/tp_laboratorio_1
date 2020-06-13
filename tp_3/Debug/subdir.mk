@@ -6,18 +6,21 @@
 C_SRCS += \
 ../Controller.c \
 ../Employee.c \
+../funciones.c \
 ../main.c \
 ../parser.c 
 
 OBJS += \
 ./Controller.o \
 ./Employee.o \
+./funciones.o \
 ./main.o \
 ./parser.o 
 
 C_DEPS += \
 ./Controller.d \
 ./Employee.d \
+./funciones.d \
 ./main.d \
 ./parser.d 
 
