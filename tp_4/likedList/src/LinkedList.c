@@ -501,12 +501,12 @@ int ll_sort(LinkedList* this, int (*pFunc)(void* ,void*), int order)
     	for(i=0;i<len-1;i++){
     		for(j=i+1;j<len;j++){
     			pElement1 = ll_get(this,i);
-				pElement2 = ll_get(this,j);
-				condicion = pFunc(pElement1, pElement2);
+			pElement2 = ll_get(this,j);
+			condicion = pFunc(pElement1, pElement2);
 
-				if((order==1 && condicion==1) || (order==0 && condicion==-1)){
-					ll_set(this,i,pElement2);
-					ll_set(this,j,pElement1);
+			if((order==1 && condicion==1) || (order==0 && condicion==-1)){
+				ll_set(this,i,pElement2);
+				ll_set(this,j,pElement1);
     			}
 
     		}
