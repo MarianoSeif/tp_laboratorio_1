@@ -1,3 +1,10 @@
+/**
+*	Mariano Seif
+*	Curso: 1 F
+*	Legajo: 110070
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
